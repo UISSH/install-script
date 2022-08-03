@@ -58,7 +58,7 @@ if __name__ == '__main__':
 
     systemd_path = '/etc/systemd/system/multi-user.target.wants/ui-ssh.service'
 
-    with open(systemd_config,"w") as f:
+    with open(systemd_path, "w") as f:
         f.write(systemd_config)
 
     os.system(f'ln -s {systemd_path} /lib/systemd/system/ui-ssh.service')
