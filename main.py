@@ -2,23 +2,20 @@ import argparse
 import os
 import sys
 
-systemd_config = """
-[Unit]
+systemd_config = """[Unit]
 Description=ui-ssh
 After=network.target
 
 [Service]
 User=root
-Group=www
+Group=root
 WorkingDirectory=/usr/local/uissh/backend
 Restart=always
 RestartSec=5
 ExecStart=/usr/local/uissh/backend/venv/bin/gunicorn UISSH.asgi:application -k uvicorn.workers.UvicornWorker -b 0.0.0.0:8000
 
 [Install]
-WantedBy=multi-user.target
-
-"""
+WantedBy=multi-user.target"""
 
 if __name__ == '__main__':
     if not os.geteuid() == 0:
@@ -40,8 +37,6 @@ if __name__ == '__main__':
     password = args.set_login_password
     db_password = args.set_db_root_password
 
-
-
     os.system('/usr/bin/python3 ./src/nginx/nginx.py')
     os.system('/usr/bin/python3 ./src/certbot/certbot.py')
     os.system('/usr/bin/python3 ./src/osquery/osquery.py')
@@ -56,15 +51,14 @@ if __name__ == '__main__':
     os.system(f'DJANGO_SUPERUSER_PASSWORD={password} '
               f'DJANGO_SUPERUSER_USERNAME={username} '
               f'DJANGO_SUPERUSER_EMAIL={email}'
-              f' ./venv/bin/python3 manage.py createsuperuser --noinput')
+              f'/usr/local/uissh/backend/venv/bin/python3 manage.py createsuperuser --noinput')
 
-
-    systemd_path = '/etc/systemd/system/multi-user.target.wants/ui-ssh.service'
+    systemd_path = '/lib/systemd/system/ui-ssh.service'
 
     with open(systemd_path, "w") as f:
         f.write(systemd_config)
 
-    os.system(f'ln -s {systemd_path} /lib/systemd/system/ui-ssh.service')
+    os.system(f'ln -s {systemd_path}  /etc/systemd/system/ui-ssh.service')
     os.system('systemctl enable --now ui-ssh')
 
     info = f"""
