@@ -3,19 +3,19 @@ import os
 import sys
 
 systemd_config = """[Unit]
-Description=ui-ssh
-After=network.target
-
-[Service]
-User=root
-Group=root
-WorkingDirectory=/usr/local/uissh/backend
-Restart=always
-RestartSec=5
-ExecStart=/usr/local/uissh/backend/venv/bin/gunicorn UISSH.asgi:application -k uvicorn.workers.UvicornWorker -b 0.0.0.0:8000
-
-[Install]
-WantedBy=multi-user.target"""
+    Description=ui-ssh
+    After=network.target
+    
+    [Service]
+    User=root
+    Group=root
+    WorkingDirectory=/usr/local/uissh/backend
+    Restart=always
+    RestartSec=5
+    ExecStart=/usr/local/uissh/backend/venv/bin/gunicorn UISSH.asgi:application -k uvicorn.workers.UvicornWorker -b 0.0.0.0:8000
+    
+    [Install]
+    WantedBy=multi-user.target"""
 
 if __name__ == '__main__':
     if not os.geteuid() == 0:
@@ -48,10 +48,10 @@ if __name__ == '__main__':
 
     os.system('bash install_backend.sh')
 
-    os.system(f'DJANGO_SUPERUSER_PASSWORD={password} '
-              f'DJANGO_SUPERUSER_USERNAME={username} '
-              f'DJANGO_SUPERUSER_EMAIL={email}'
-              f'/usr/local/uissh/backend/venv/bin/python3 manage.py createsuperuser --noinput')
+    program_dir = '/usr/local/uissh/backend'
+    cmd = f'{program_dir}/venv/bin/python3 {program_dir}/manage.py createsuperuser --noinput'
+    cmd = f'DJANGO_SUPERUSER_PASSWORD={password} DJANGO_SUPERUSER_USERNAME={username} DJANGO_SUPERUSER_EMAIL={email} {cmd}'
+    os.system(cmd)
 
     systemd_path = '/lib/systemd/system/ui-ssh.service'
 
@@ -62,12 +62,12 @@ if __name__ == '__main__':
     os.system('systemctl enable --now ui-ssh')
 
     info = f"""
---------------------------
-db username:root
-db password:{db_password}
---------------------------
-email:{email}
-username:root
-password:{password}
-"""
+    --------------------------
+    db username:root
+    db password:{db_password}
+    --------------------------
+    email:{email}
+    username:root
+    password:{password}
+    """
     print(info)
