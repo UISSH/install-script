@@ -47,16 +47,16 @@ if __name__ == '__main__':
               f'DJANGO_SUPERUSER_EMAIL={email}'
               f' ./venv/bin/python3 manage.py createsuperuser --noinput')
 
-    os.system('/usr/bin/python3 .src/nginx/nginx.py')
-    os.system('/usr/bin/python3 .src/certbot/certbot.py')
-    os.system('/usr/bin/python3 .src/osquery/osquery.py')
-    os.system('/usr/bin/python3 .src/php/php.py')
+    os.system('/usr/bin/python3 ./src/nginx/nginx.py')
+    os.system('/usr/bin/python3 ./src/certbot/certbot.py')
+    os.system('/usr/bin/python3 ./src/osquery/osquery.py')
+    os.system('/usr/bin/python3 ./src/php/php.py')
 
-    os.system(f'/usr/bin/python3 .src/database/mariadb.py --set_root_password={db_password}')
+    os.system(f'/usr/bin/python3 ./src/database/mariadb.py --set_root_password={db_password}')
 
-    os.system(f'/usr/bin/python3 .src/phpmyadmin/phpmyadmin.py --set_root_password={db_password}')
+    os.system(f'/usr/bin/python3 ./src/phpmyadmin/phpmyadmin.py --set_root_password={db_password}')
 
-    systemd_path = 'etc/systemd/system/multi-user.target.wants/ui-ssh.service'
+    systemd_path = '/etc/systemd/system/multi-user.target.wants/ui-ssh.service'
 
     with open(systemd_config,"w") as f:
         f.write(systemd_config)
