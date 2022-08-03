@@ -2,7 +2,7 @@ import argparse
 import os
 import sys
 
-systemd_server = """
+systemd_config = """
 [Unit]
 Description=ui-ssh
 After=network.target
@@ -10,10 +10,10 @@ After=network.target
 [Service]
 User=root
 Group=www
-WorkingDirectory=/www/wwwroot/jcpay.sspanda.com
+WorkingDirectory=/usr/local/uissh/backend
 Restart=always
 RestartSec=5
-ExecStart=/www/wwwroot/jcpay.sspanda.com/dj_venv/bin/gunicorn --worker-class=gevent --worker-connections=1000 --workers=3  --bind unix:/var/run/jcpmpay.sock JCPMPay.wsgi:application
+ExecStart=/usr/local/uissh/backend/venv/bin/gunicorn UISSH.asgi:application -k uvicorn.workers.UvicornWorker -b 0.0.0.0:8000
 
 [Install]
 WantedBy=multi-user.target
@@ -55,3 +55,22 @@ if __name__ == '__main__':
     os.system(f'/usr/bin/python3 .src/database/mariadb.py --set_root_password={db_password}')
 
     os.system(f'/usr/bin/python3 .src/phpmyadmin/phpmyadmin.py --set_root_password={db_password}')
+
+    systemd_path = 'etc/systemd/system/multi-user.target.wants/ui-ssh.service'
+
+    with open(systemd_config,"w") as f:
+        f.write(systemd_config)
+
+    os.system(f'ln -s {systemd_path} /lib/systemd/system/ui-ssh.service')
+    os.system('systemctl enable --now ui-ssh')
+
+    info = f"""
+--------------------------
+db username:root
+db password:{db_password}
+--------------------------
+email:{email}
+username:root
+password:{password}
+"""
+    print(info)

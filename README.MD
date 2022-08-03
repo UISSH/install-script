@@ -11,5 +11,8 @@ Start install
 
 ```bash
 cd /tmp/install-script 
-python3 install.py --set_db_root_password=yourpassword
+python3 install.py \
+ --set_db_root_password={password} \
+ --set_login_email={email} \
+ --set_login_password={password}
 ```
