@@ -40,12 +40,7 @@ if __name__ == '__main__':
     password = args.set_login_password
     db_password = args.set_db_root_password
 
-    os.system('bash install_backend.sh')
 
-    os.system(f'DJANGO_SUPERUSER_PASSWORD={password} '
-              f'DJANGO_SUPERUSER_USERNAME={username} '
-              f'DJANGO_SUPERUSER_EMAIL={email}'
-              f' ./venv/bin/python3 manage.py createsuperuser --noinput')
 
     os.system('/usr/bin/python3 ./src/nginx/nginx.py')
     os.system('/usr/bin/python3 ./src/certbot/certbot.py')
@@ -55,6 +50,14 @@ if __name__ == '__main__':
     os.system(f'/usr/bin/python3 ./src/database/mariadb.py --set_root_password={db_password}')
 
     os.system(f'/usr/bin/python3 ./src/phpmyadmin/phpmyadmin.py --set_root_password={db_password}')
+
+    os.system('bash install_backend.sh')
+
+    os.system(f'DJANGO_SUPERUSER_PASSWORD={password} '
+              f'DJANGO_SUPERUSER_USERNAME={username} '
+              f'DJANGO_SUPERUSER_EMAIL={email}'
+              f' ./venv/bin/python3 manage.py createsuperuser --noinput')
+
 
     systemd_path = '/etc/systemd/system/multi-user.target.wants/ui-ssh.service'
 
