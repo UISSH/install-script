@@ -1,6 +1,6 @@
 mkdir /usr/local/uissh/ 
 cd /usr/local/uissh/ && git clone https://github.com/UISSH/backend.git
-cd /usr/local/uissh/backend && virtualenv venv
+cd /usr/local/uissh/backend && python3 -m venv venv
 /usr/local/uissh/backend/venv/bin/pip install -r requirements.txt
 cp /usr/local/uissh/backend/.env.template /usr/local/uissh/backend/.env
 /usr/local/uissh/backend/venv/bin/python3 manage.py makemigrations
