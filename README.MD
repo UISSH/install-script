@@ -3,7 +3,7 @@
 Download init script
 
 ```bash
-wget https://github.com/UISSH/install-script/blob/main/install.sh 
+wget https://raw.githubusercontent.com/UISSH/install-script/main/install.sh
 bash install.sh
 ```
 
