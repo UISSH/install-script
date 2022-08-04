@@ -1,18 +1,21 @@
 # Installation
 
-Download init script
+Currently only supports debian 11.
+
+**1.Download init script**
 
 ```bash
 wget https://raw.githubusercontent.com/UISSH/install-script/main/install.sh
 bash install.sh
 ```
 
-Start install
+**2.Start install backend program**
 
 ```bash
 cd /tmp/install-script 
-python3 main.py \
- --set_db_root_password={password} \
- --set_login_email={email} \
- --set_login_password={password}
+python3 main.py --set_db_root_password=* --set_login_email=* --set_login_password=*
 ```
+
+Website login username: root 
+
+Database default username: root
