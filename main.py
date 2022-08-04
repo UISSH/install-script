@@ -1,6 +1,14 @@
 import argparse
 import os
 import sys
+import urllib.request
+
+
+def get_public_ip():
+    with urllib.request.urlopen('https://ifconfig.me') as response:
+        html = response.read()
+        return html.decode().strip()
+
 
 systemd_config = """[Unit]
     Description=ui-ssh
@@ -69,5 +77,12 @@ if __name__ == '__main__':
     email:{email}
     username:root
     password:{password}
+    --------------------------
+    management address：
+      - http://{get_public_ip()}:8000/#/
+      - https://dev-dash.uissh.com/#/?api_url=https://{get_public_ip()}:8000
+        (need to enable ssl.)
+    phpmyadmin address:
+      - http://{get_public_ip()}:8080
     """
     print(info)
