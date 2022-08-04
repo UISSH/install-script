@@ -53,17 +53,21 @@ if __name__ == '__main__':
     os.system(cmd)
 
     # Write the database password to the backend config.
-    backend_database_password = "/usr/local/uissh/backend/common/config.py"
-    with open(backend_database_password, "r") as f:
-        data = f.read().replace("*-*-*root_password*-*-*", db_password)
-
-    with open(backend_database_password, "w") as f:
+    print("Write the database password to the backend config.")
+    sql_path = "config/sync_config.sql"
+    with open(sql_path, "r") as f:
+        data = f.read().replace("****", db_password)
+    with open(sql_path, "w") as f:
         f.write(data)
 
+    cmd = f'sqlite3 /usr/local/uissh/backend/db.sqlite3 < {sql_path}'
+    os.system(cmd)
+
     # Sync CORS_ALLOWED_ORIGINS and CSRF_TRUSTED_ORIGINS settings
+    print("Sync CORS_ALLOWED_ORIGINS and CSRF_TRUSTED_ORIGINS settings")
     _env_path = "/usr/local/uissh/backend/.env"
     with open(_env_path, "r") as f:
-        data = f.read().replace("https://dash.uissh.com", f"https://dash.uissh.com,{get_public_ip()}")
+        data = f.read().replace("https://dash.uissh.com", f"https://dash.uissh.com,http://{get_public_ip()}")
     with open(_env_path, "w") as f:
         f.write(data)
 
@@ -85,8 +89,8 @@ if __name__ == '__main__':
     password:{password}
     --------------------------
     management address：
-      - http://{get_public_ip()}:8000/#/
-      - https://dev-dash.uissh.com/#/?apiUrl=https://{get_public_ip()}:8000
+      - http://{get_public_ip()}/#/
+      - https://dev-dash.uissh.com/#/?apiUrl=https://{get_public_ip()}
         (need to enable ssl.)
     phpmyadmin address:
       - http://{get_public_ip()}:8080
