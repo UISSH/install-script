@@ -3,27 +3,18 @@ import os
 import sys
 import urllib.request
 
+PUBLIC_IP = None
+
 
 def get_public_ip():
-    with urllib.request.urlopen('https://ifconfig.me') as response:
-        html = response.read()
-        return html.decode().strip()
+    global PUBLIC_IP
 
+    if PUBLIC_IP is None:
+        with urllib.request.urlopen('https://ifconfig.me') as response:
+            html = response.read()
+            PUBLIC_IP = html.decode().strip()
+    return PUBLIC_IP
 
-systemd_config = """[Unit]
-    Description=ui-ssh
-    After=network.target
-    
-    [Service]
-    User=root
-    Group=root
-    WorkingDirectory=/usr/local/uissh/backend
-    Restart=always
-    RestartSec=5
-    ExecStart=/usr/local/uissh/backend/venv/bin/gunicorn UISSH.asgi:application -k uvicorn.workers.UvicornWorker -b 0.0.0.0:8000
-    
-    [Install]
-    WantedBy=multi-user.target"""
 
 if __name__ == '__main__':
     if not os.geteuid() == 0:
@@ -69,13 +60,20 @@ if __name__ == '__main__':
     with open(backend_database_password, "w") as f:
         f.write(data)
 
-    systemd_path = '/lib/systemd/system/ui-ssh.service'
+    # Sync CORS_ALLOWED_ORIGINS and CSRF_TRUSTED_ORIGINS settings
+    _env_path = "/usr/local/uissh/backend/.env"
+    with open(_env_path, "r") as f:
+        data = f.read().replace("https://dash.uissh.com", f"https://dash.uissh.com,{get_public_ip()}")
+    with open(_env_path, "w") as f:
+        f.write(data)
 
-    with open(systemd_path, "w") as f:
-        f.write(systemd_config)
+    systemd_path = '/lib/systemd/system/ui-ssh.service'
+    os.system(f'cp ./config/backend.conf /etc/nginx/sites-available/default')
+    os.system(f'cp ./config/ui-ssh.service {systemd_path}')
 
     os.system(f'ln -s {systemd_path}  /etc/systemd/system/ui-ssh.service')
     os.system('systemctl enable --now ui-ssh')
+    os.system('systemctl restart nginx')
 
     info = f"""
     --------------------------

@@ -1,0 +1,14 @@
+[Unit]
+Description=ui-ssh
+After=network.target
+
+[Service]
+User=root
+Group=root
+WorkingDirectory=/usr/local/uissh/backend
+Restart=always
+RestartSec=5
+ExecStart=/usr/local/uissh/backend/venv/bin/gunicorn UISSH.asgi:application -k uvicorn.workers.UvicornWorker
+
+[Install]
+WantedBy=multi-user.target
