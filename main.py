@@ -61,6 +61,14 @@ if __name__ == '__main__':
     cmd = f'DJANGO_SUPERUSER_PASSWORD={password} DJANGO_SUPERUSER_USERNAME={username} DJANGO_SUPERUSER_EMAIL={email} {cmd}'
     os.system(cmd)
 
+    # Write the database password to the backend config.
+    backend_database_password = "/usr/local/uissh/backend/common/config.py"
+    with open(backend_database_password, "r") as f:
+        data = f.read().replace("*-*-*root_password*-*-*", db_password)
+
+    with open(backend_database_password, "w") as f:
+        f.write(data)
+
     systemd_path = '/lib/systemd/system/ui-ssh.service'
 
     with open(systemd_path, "w") as f:
@@ -80,7 +88,7 @@ if __name__ == '__main__':
     --------------------------
     management address：
       - http://{get_public_ip()}:8000/#/
-      - https://dev-dash.uissh.com/#/?api_url=https://{get_public_ip()}:8000
+      - https://dev-dash.uissh.com/#/?apiUrl=https://{get_public_ip()}:8000
         (need to enable ssl.)
     phpmyadmin address:
       - http://{get_public_ip()}:8080
