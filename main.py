@@ -17,7 +17,7 @@ def bind_domain(_email, _domain):
     if p.returncode == 0:
         os.system(f'cp ./config/backend_ssl.conf /etc/nginx/sites-available/backend_ssl.conf')
         os.system(f'ln -s /etc/nginx/sites-available/backend_ssl.conf /etc/nginx/sites-enabled/backend_ssl.conf')
-        os.system(f'cp .config/phpmyadmin_ssl.conf /etc/nginx/conf.d/phpMyAdmin.conf')
+        os.system(f'cp ./config/phpmyadmin_ssl.conf /etc/nginx/conf.d/phpMyAdmin.conf')
         os.system("sed -i 's/{domain}/dash.uissh.com/g' /etc/nginx/conf.d/phpMyAdmin.conf")
         os.system("sed -i 's/{domain}/dash.uissh.com/g' /etc/nginx/sites-enabled/backend_ssl.conf")
         os.system("systemctl reload nginx")
