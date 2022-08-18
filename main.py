@@ -118,7 +118,7 @@ if __name__ == '__main__':
       - https://{domain}/#/
       - https://dev-dash.uissh.com/#/?apiUrl=https://{domain} (need to enable ssl.)
     phpmyadmin address:
-      - https://{domain()}:8080
+      - https://{domain}:8080
       """
     else:
         management_info = f"""
