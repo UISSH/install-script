@@ -13,7 +13,7 @@ bash install.sh
 
 ```bash
 cd /tmp/install-script 
-python3 main.py --set_db_root_password=* --set_login_email=* --set_login_password=*
+python3 main.py --login_email=* --db_root_password=* --login_password=*
 ```
 
 Website login username: root 

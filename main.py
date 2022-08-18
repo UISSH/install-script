@@ -1,9 +1,28 @@
 import argparse
 import os
+import subprocess
 import sys
 import urllib.request
 
 PUBLIC_IP = None
+
+
+def bind_domain(_email, _domain):
+    cmd = ['certbot', 'certonly', '-n', '--nginx', '--reuse-key', '--agree-tos', '-m', _email, '--fullchain-path',
+           f"/etc/letsencrypt/live/{domain}/fullchain.pem", '--key-path',
+           f"/etc/letsencrypt/live/{_domain}/privkey.pem",
+           '-d', _domain, '-v']
+
+    p = subprocess.run(cmd, capture_output=True)
+    if p.returncode == 0:
+        os.system(f'cp ./config/backend_ssl.conf /etc/nginx/sites-available/backend_ssl.conf')
+        os.system(f'ln -s /etc/nginx/sites-available/backend_ssl.conf /etc/nginx/sites-enabled/backend_ssl.conf')
+        os.system(f'cp .config/phpmyadmin_ssl.conf /etc/nginx/conf.d/phpMyAdmin.conf')
+        os.system("sed -i 's/{domain}/dash.uissh.com/g' /etc/nginx/conf.d/phpMyAdmin.conf")
+        os.system("sed -i 's/{domain}/dash.uissh.com/g' /etc/nginx/sites-enabled/backend_ssl.conf")
+        os.system("systemctl reload nginx")
+
+    return p
 
 
 def get_public_ip():
@@ -20,21 +39,26 @@ if __name__ == '__main__':
     if not os.geteuid() == 0:
         sys.exit("\nOnly root can run this script\n")
     parser = argparse.ArgumentParser(description="ui-ssh install script.")
-    parser.add_argument('--set_login_username', type=str,
-                        help='website management username.', default='root')
-    parser.add_argument('--set_login_email', type=str,
+    parser.add_argument('--login_email', type=str,
                         help='website management email.')
-    parser.add_argument('--set_login_password', type=str,
+
+    parser.add_argument('--login_username', type=str,
+                        help='website management username.', default='root')
+
+    parser.add_argument('--login_password', type=str,
                         help='website management password.')
-    parser.add_argument('--set_db_root_password', type=str,
+    parser.add_argument('--db_root_password', type=str,
                         help='Setting the root password ensures that nobody can log into the MariaDB'
                              ' root user without the proper authorisation.')
-    args = parser.parse_args()
 
-    email = args.set_login_email
-    username = args.set_login_username
-    password = args.set_login_password
-    db_password = args.set_db_root_password
+    parser.add_argument('--domain', type=str, default="")
+
+    args = parser.parse_args()
+    email = args.login_email
+    username = args.login_username
+    password = args.login_password
+    db_password = args.db_root_password
+    domain = args.domain
 
     os.system('/usr/bin/python3 ./src/nginx/nginx.py')
     os.system('/usr/bin/python3 ./src/certbot/certbot.py')
@@ -63,11 +87,19 @@ if __name__ == '__main__':
     cmd = f'sqlite3 /usr/local/uissh/backend/db.sqlite3 < {sql_path}'
     os.system(cmd)
 
+    if domain:
+        if bind_domain(email, domain).returncode != 0:
+            domain = None
+
     # Sync CORS_ALLOWED_ORIGINS and CSRF_TRUSTED_ORIGINS settings
     print("Sync CORS_ALLOWED_ORIGINS and CSRF_TRUSTED_ORIGINS settings")
     _env_path = "/usr/local/uissh/backend/.env"
     with open(_env_path, "r") as f:
-        data = f.read().replace("https://dash.uissh.com", f"https://dash.uissh.com,http://{get_public_ip()}")
+        new_data = f"https://dash.uissh.com,http://{get_public_ip()}"
+        if domain:
+            new_data += f',http://{domain},https://{domain}'
+
+        data = f.read().replace("https://dash.uissh.com", new_data)
     with open(_env_path, "w") as f:
         f.write(data)
 
@@ -79,6 +111,24 @@ if __name__ == '__main__':
     os.system('systemctl enable --now ui-ssh')
     os.system('systemctl restart nginx')
 
+    if domain:
+        management_info = f"""
+    management address：
+      - http://{get_public_ip()}/#/
+      - https://{domain}/#/
+      - https://dev-dash.uissh.com/#/?apiUrl=https://{domain} (need to enable ssl.)
+    phpmyadmin address:
+      - https://{domain()}:8080
+      """
+    else:
+        management_info = f"""
+    management address：
+      - http://{get_public_ip()}/#/
+      - https://dev-dash.uissh.com/#/?apiUrl=https://{get_public_ip()} (need to enable ssl.)
+    phpmyadmin address:
+      - http://{get_public_ip()}:8080
+    """
+
     info = f"""
     --------------------------
     db username:root
@@ -88,11 +138,6 @@ if __name__ == '__main__':
     username:root
     password:{password}
     --------------------------
-    management address：
-      - http://{get_public_ip()}/#/
-      - https://dev-dash.uissh.com/#/?apiUrl=https://{get_public_ip()}
-        (need to enable ssl.)
-    phpmyadmin address:
-      - http://{get_public_ip()}:8080
+{management_info}
     """
     print(info)
