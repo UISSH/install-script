@@ -18,8 +18,8 @@ def bind_domain(_email, _domain):
         os.system(f'cp ./config/backend_ssl.conf /etc/nginx/sites-available/backend_ssl.conf')
         os.system(f'ln -s /etc/nginx/sites-available/backend_ssl.conf /etc/nginx/sites-enabled/backend_ssl.conf')
         os.system(f'cp ./config/phpmyadmin_ssl.conf /etc/nginx/conf.d/phpMyAdmin.conf')
-        os.system("sed -i 's/{domain}/dash.uissh.com/g' /etc/nginx/conf.d/phpMyAdmin.conf")
-        os.system("sed -i 's/{domain}/dash.uissh.com/g' /etc/nginx/sites-enabled/backend_ssl.conf")
+        os.system(f"sed -i 's/{{domain}}/{domain}/g' /etc/nginx/conf.d/phpMyAdmin.conf")
+        os.system(f"sed -i 's/{{domain}}/{domain}/g' /etc/nginx/sites-enabled/backend_ssl.conf")
         os.system("systemctl reload nginx")
 
     return p
