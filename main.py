@@ -10,8 +10,7 @@ PUBLIC_IP = None
 def bind_domain(_email, _domain):
     cmd = ['certbot', 'certonly', '-n', '--nginx', '--reuse-key', '--agree-tos', '-m', _email, '--fullchain-path',
            f"/etc/letsencrypt/live/{domain}/fullchain.pem", '--key-path',
-           f"/etc/letsencrypt/live/{_domain}/privkey.pem",
-           '-d', _domain, '-v']
+           f"/etc/letsencrypt/live/{_domain}/privkey.pem", '-d', _domain, '-v']
 
     p = subprocess.run(cmd, capture_output=True)
     if p.returncode == 0:
@@ -39,14 +38,11 @@ if __name__ == '__main__':
     if not os.geteuid() == 0:
         sys.exit("\nOnly root can run this script\n")
     parser = argparse.ArgumentParser(description="ui-ssh install script.")
-    parser.add_argument('--login_email', type=str,
-                        help='website management email.')
+    parser.add_argument('--login_email', type=str, help='website management email.')
 
-    parser.add_argument('--login_username', type=str,
-                        help='website management username.', default='root')
+    parser.add_argument('--login_username', type=str, help='website management username.', default='root')
 
-    parser.add_argument('--login_password', type=str,
-                        help='website management password.')
+    parser.add_argument('--login_password', type=str, help='website management password.')
     parser.add_argument('--db_root_password', type=str,
                         help='Setting the root password ensures that nobody can log into the MariaDB'
                              ' root user without the proper authorisation.')
@@ -100,6 +96,10 @@ if __name__ == '__main__':
             new_data += f',http://{domain},https://{domain}'
 
         data = f.read().replace("https://dash.uissh.com", new_data)
+
+    if domain:
+        data = data.replace("WEBSITE_ADDRESS=", f"WEBSITE_ADDRESS={domain}")
+
     with open(_env_path, "w") as f:
         f.write(data)
 
