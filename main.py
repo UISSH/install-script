@@ -6,6 +6,8 @@ import urllib.request
 
 PUBLIC_IP = None
 
+VERSION = ''
+
 
 def bind_domain(_email, _domain):
     cmd = ['certbot', 'certonly', '-n', '--nginx', '--reuse-key', '--agree-tos', '-m', _email, '--fullchain-path',
@@ -34,7 +36,33 @@ def get_public_ip():
     return PUBLIC_IP
 
 
+def install_backend(version="v0.0.2-alpha"):
+    project_dir = "/usr/local/uissh"
+    python_bin = f"{project_dir}/backend/venv/bin/python3"
+    cmd = f"""
+    mkdir -p {project_dir};
+    cd {project_dir} && \
+    wget https://github.com/UISSH/backend/archive/refs/heads/release-{version}.zip -O backend.zip && \
+    unzip backend.zip && mv backend-release-{version} backend;
+    
+    cd {project_dir}/backend && python3 -m venv venv &&\
+    {project_dir}/backend/venv/bin/pip install -r requirements.txt &&\
+    cp {project_dir}/backend/.env.template {project_dir}/backend/.env &&\
+    {python_bin} manage.py makemigrations &&\
+    {python_bin} manage.py migrate &&\
+    {python_bin} manage.py collectstatic --noinput &&\
+
+    cd {project_dir}/backend/static  && \    
+    wget https://github.com/UISSH/frontend/releases/download/{version}/django_spa.zip -O  "django_spa.zip" && \
+    rm -rf common spa && \
+    unzip django_spa.zip && \
+    mv spa common
+    """
+    os.system(cmd)
+
+
 if __name__ == '__main__':
+
     if not os.geteuid() == 0:
         sys.exit("\nOnly root can run this script\n")
     parser = argparse.ArgumentParser(description="ui-ssh install script.")
@@ -65,7 +93,7 @@ if __name__ == '__main__':
 
     os.system(f'/usr/bin/python3 ./src/phpmyadmin/phpmyadmin.py --set_root_password={db_password}')
 
-    os.system('bash install_backend.sh')
+    install_backend()
 
     program_dir = '/usr/local/uissh/backend'
     cmd = f'{program_dir}/venv/bin/python3 {program_dir}/manage.py createsuperuser --noinput'
