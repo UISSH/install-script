@@ -209,8 +209,8 @@ def install_phpmyadmin() -> (bytes, bytes):
     # """
     _cmd = f"""
     wget https://files.phpmyadmin.net/phpMyAdmin/{phpmyadmin_version}/phpMyAdmin-{phpmyadmin_version}-all-languages.tar.gz
-    tar -zxvf phpMyAdmin-{phpmyadmin_version}-all-languages.tar.gz
-    mv phpMyAdmin-{phpmyadmin_version}-all-languages /usr/share/phpMyAdmin
+    tar -zxvf phpMyAdmin-{phpmyadmin_version}-all-languages.tar.gz >> /dev/null
+    mv phpMyAdmin-{phpmyadmin_version}-all-languages /usr/share/phpMyAdmin 
   
     """
     # cp -pr /usr/share/phpMyAdmin/config.sample.inc.php /usr/share/phpMyAdmin/config.inc.php
