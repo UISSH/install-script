@@ -34,7 +34,11 @@ def bind_domain():
         os.system(f"sed -i 's/{{domain}}/{DOMAIN}/g' /etc/nginx/conf.d/phpMyAdmin.conf")
         os.system(f"sed -i 's/{{domain}}/{DOMAIN}/g' /etc/nginx/sites-enabled/backend_ssl.conf")
         os.system("systemctl reload nginx")
+    print("================================")
     print(p.stdout)
+    if p.stderr:
+        print(p.stderr)
+    print("================================")
     return p
 
 
