@@ -5,7 +5,7 @@ jobs:
     runs-on: ubuntu-22.04
     name: Test install backend on Debian 11
     steps:
-      - name: Download Debian 11
+      - name: Test run server
         uses: UISSH/install-script@latest
 
 
