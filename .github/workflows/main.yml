@@ -6,4 +6,4 @@ jobs:
     name: Test install backend on Debian 11
     steps:
       - name: Test install backend
-        uses: actions/install-script@v1
+        uses: actions/test-install-backend@v1
