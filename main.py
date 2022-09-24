@@ -41,6 +41,7 @@ def bind_domain():
         p = subprocess.run(_cmd_list, capture_output=True)
     else:
         p = subprocess.run(_cmd_list, capture_output=True)
+        print("================================")
         if p.returncode == 0:
             cmd(f'cp ./config/backend_ssl.conf /etc/nginx/sites-available/backend_ssl.conf')
             cmd(f'ln -s /etc/nginx/sites-available/backend_ssl.conf /etc/nginx/sites-enabled/backend_ssl.conf',
@@ -49,11 +50,11 @@ def bind_domain():
             cmd(f"sed -i 's/{{domain}}/{DOMAIN}/g' /etc/nginx/conf.d/phpMyAdmin.conf")
             cmd(f"sed -i 's/{{domain}}/{DOMAIN}/g' /etc/nginx/sites-enabled/backend_ssl.conf")
             cmd("systemctl reload nginx")
-            print("================================")
             print(p.stdout)
+        else:
             if p.stderr:
                 print(p.stderr)
-            print("================================")
+        print("================================")
     return p
 
 
