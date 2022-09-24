@@ -10,7 +10,7 @@ jobs:
       - name: Check out repository code
         uses: actions/checkout@v3
       - name: Install backend
-        run: python3 main.py --login_email=root@root.com --db_root_password=root --login_password=root --test=true
+        run: sudo python3 main.py --login_email=root@root.com --db_root_password=root --login_password=root --test=true
       - name: Test run server
         run: bash test_install.sh
 
