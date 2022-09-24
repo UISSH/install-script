@@ -12,4 +12,4 @@ RUN python3 ./src/nginx/nginx.py &&\
     python3 ./src/phpmyadmin/phpmyadmin.py --set_root_password=root
 
 
-ENTRYPOINT ["/test_installc.sh"]
+ENTRYPOINT ["/test_install.sh"]
