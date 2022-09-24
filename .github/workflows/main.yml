@@ -5,5 +5,13 @@ jobs:
     runs-on: ubuntu-latest
     name: Test install backend on Debian 11
     steps:
-      - name: Test install backend
+      - name: Download Debian 11
         uses: UISSH/install-script@latest
+      - name: Install backend
+        working-directory: /tmp/install-script
+        run: python3 main.py --login_email=root@root.com --db_root_password=root --login_password=root --test=true
+      - name: Test run server
+        working-directory: /
+        run: bash test_install.sh
+
+
