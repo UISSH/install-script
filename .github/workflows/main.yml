@@ -3,7 +3,7 @@ on: [push]
 jobs:
   hello_world_job:
     runs-on: ubuntu-latest
-    name: A job to say hello
+    name: Test install backend on Debian 11
     steps:
       - name: Test install backend
         uses: actions/install-script@v1
