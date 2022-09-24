@@ -6,4 +6,4 @@ jobs:
     name: Test install backend on Debian 11
     steps:
       - name: Test install backend
-        uses: UISSH/install-script@@latest
+        uses: UISSH/install-script@latest
