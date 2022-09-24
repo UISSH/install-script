@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 
-python3 main.py --login_email=root@root.com --db_root_password=root --login_password=root --test=true
+cd /tmp/install-script && python3 main.py --login_email=root@root.com --db_root_password=root --login_password=root --test=true
 
 if (/usr/local/uissh/backend/venv/bin/python3 /usr/local/uissh/backend/manage.py check); then
   echo 'ok'
