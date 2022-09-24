@@ -89,6 +89,8 @@ def install_backend():
 
 
 def install_lnmp():
+    if TEST_FLAG:
+        return
     os.system('/usr/bin/python3 ./src/nginx/nginx.py')
     os.system('/usr/bin/python3 ./src/certbot/certbot.py')
     os.system('/usr/bin/python3 ./src/osquery/osquery.py')
@@ -136,11 +138,14 @@ def init_backend_settings():
     with open(_env_path, "w") as f:
         f.write(data)
 
+
+
+def init_system_config():
     systemd_path = '/lib/systemd/system/ui-ssh.service'
     cmd(f'cp ./config/backend.conf /etc/nginx/sites-available/default')
     cmd(f'cp ./config/ui-ssh.service {systemd_path}')
 
-    cmd(f'ln -s {systemd_path}  /etc/systemd/system/ui-ssh.service', ignore=True)
+    cmd(f'ln -s {systemd_path} /etc/systemd/system/ui-ssh.service', ignore=True)
     cmd('systemctl enable --now ui-ssh')
     cmd('systemctl restart nginx')
 
@@ -181,7 +186,6 @@ def print_info():
 
     print(info)
 
-
 def test_systemd(name, cmd):
     print(f'test {name} ...')
     if os.system(cmd) == 0:
@@ -199,7 +203,6 @@ def test():
 
 
 if __name__ == '__main__':
-
 
     if not os.geteuid() == 0:
         sys.exit("\nOnly root can run this script\n")
@@ -226,9 +229,14 @@ if __name__ == '__main__':
     DOMAIN = args.domain
     TEST_FLAG = args.test
 
-    install_lnmp()
-    install_backend()
-    init_backend_settings()
-    print_info()
     if TEST_FLAG:
+        install_backend()
+        init_backend_settings()
+        print_info()
+    else:
+        install_lnmp()
+        install_backend()
+        init_backend_settings()
+        init_system_config()
+        print_info()
         test()

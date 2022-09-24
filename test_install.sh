@@ -1,6 +1,8 @@
+#!/usr/bin/env bash
+bash install.sh
 python3 main.py --login_email=root@root.com --db_root_password=root --login_password=root --test=true
 
-if (systemctl is-active -q ui-ssh); then
+if (/usr/local/uissh/backend/venv/bin/python3 /usr/local/uissh/backend/manage.py check); then
   echo 'ok'
   exit 0
 else
