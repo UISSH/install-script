@@ -5,8 +5,7 @@ Currently only supports debian 11.
 **1.Download init script**
 
 ```bash
-wget https://raw.githubusercontent.com/UISSH/install-script/main/install.sh
-bash install.sh
+curl -o- -L https://raw.githubusercontent.com/UISSH/install-script/main/install.sh | bash -s --
 ```
 
 **2.Start install backend program**
@@ -19,12 +18,16 @@ bash install.sh
 
 ```bash
 cd /tmp/install-script 
-python3 main.py --login_email=* --db_root_password=* --login_password=* --domain=your.domain.com
+python3 main.py --login_email=root@root.com --db_root_password=root --login_password=root --domain=demo.uissh.com
 ```
 
 > For IP access, this method is not recommended.
 ```bash
 cd /tmp/install-script 
-python3 main.py --login_email=* --db_root_password=* --login_password=*
+python3 main.py --login_email=root@root.com --db_root_password=root --login_password=root
 ```
+# Test
 
+```
+python3 main.py --login_email=root@root.com --db_root_password=root --login_password=root --test=true
+```
