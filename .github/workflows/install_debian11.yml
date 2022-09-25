@@ -1,3 +1,5 @@
+name: Install Debian 11 Test
+
 on: [ push ]
 
 jobs:
