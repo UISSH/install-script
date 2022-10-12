@@ -7,7 +7,7 @@ import urllib.request
 MIRROR_URL = 'https://mirror-cloudflare.uissh.com/'
 TEST_FLAG = False
 BACKEND_VERSION = "v0.0.4-alpha"
-BACKEND_URL = F"{MIRROR_URL}https://github.com/UISSH/backend/archive/refs/heads/release-{BACKEND_VERSION}.zip"
+BACKEND_URL = f"{MIRROR_URL}https://github.com/UISSH/backend/archive/refs/tags/{BACKEND_VERSION}.zip"
 FRONTEND_VERSION = "v0.0.3-alpha"
 FRONTEND_URL = f"{MIRROR_URL}https://github.com/UISSH/frontend/releases/download/{FRONTEND_VERSION}/django_spa.zip"
 
@@ -71,8 +71,8 @@ def get_public_ip():
 def install_backend():
     # download & install backend
     cmd(f'mkdir -p {BACKEND_DIR}')
-    cmd(f'cd {PROJECT_DIR} && wget {BACKEND_URL} -O backend.zip && rm -rf backend-release-* && '
-        f'unzip backend.zip > /dev/null && cp -r backend-release-{BACKEND_VERSION}/. backend/',
+    cmd(f'cd {PROJECT_DIR} && wget {BACKEND_URL} -O backend.zip && rm -rf backend-* && '
+        f'unzip backend.zip > /dev/null && cp -r backend-{BACKEND_VERSION.replace("v","")}/. backend/',
         'Download & install backend...')
     cmd(f'cd {PROJECT_DIR}/backend && python3 -m venv venv ', 'Install virtual environment...')
     cmd(f'{PYTHON_PIP} install wheel')
