@@ -8,7 +8,7 @@ MIRROR_URL = 'https://mirror-cloudflare.uissh.com/'
 TEST_FLAG = False
 BACKEND_VERSION = "v0.0.4-alpha"
 BACKEND_URL = f"{MIRROR_URL}https://github.com/UISSH/backend/archive/refs/tags/{BACKEND_VERSION}.zip"
-FRONTEND_VERSION = "v0.0.3-alpha"
+FRONTEND_VERSION = "v0.0.4-alpha"
 FRONTEND_URL = f"{MIRROR_URL}https://github.com/UISSH/frontend/releases/download/{FRONTEND_VERSION}/django_spa.zip"
 
 USER_EMAIL = 'root@root.com'
