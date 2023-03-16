@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# https://osquery.io/downloads/official/5.3.0
+# https://osquery.io/downloads/official/5.8.1
 import argparse
 import os
 import subprocess
@@ -26,7 +26,7 @@ def cmd(run_cmd) -> (bytes, bytes):
 
 def test():
     _res, _err = cmd("osqueryi -h")
-    if "osquery 5.3.0" in _res.decode():
+    if "osquery 5.8.1" in _res.decode():
         _result = f"\n[green]Install [blue]{soft_name}[/blue] successfully!" \
                   f"[/green]"
         print(_result)
@@ -38,17 +38,17 @@ def test():
         return False
 
 
-download_deb = "wget -q -O osquery_5.3.0-1.linux_amd64.deb https://pkg.osquery.io/deb/osquery_5.3.0-1.linux_amd64.deb"
+download_deb = "wget -q -O osquery_5.8.1-1.linux_amd64.deb https://pkg.osquery.io/deb/osquery_5.8.1-1.linux_amd64.deb"
 
 cmd_list = [
-    ["[bold]apt  download osquery_5.3.0-1.linux_amd64.deb ...[/bold]", download_deb],
-    ["[bold]apt  install osquery...[/bold]", f"dpkg -i osquery_5.3.0-1.linux_amd64.deb"],
+    ["[bold]apt  download osquery_5.8.1-1.linux_amd64.deb ...[/bold]", download_deb],
+    ["[bold]apt  install osquery...[/bold]", f"dpkg -i osquery_5.8.1-1.linux_amd64.deb"],
 
     ["[bold]apt  systemctl mask --now systemd-journald-audit.socket...[/bold]",
      f"systemctl mask --now systemd-journald-audit.socket"],
     ["[bold]apt  configure...[/bold]", f"cp /opt/osquery/share/osquery/osquery.example.conf /etc/osquery/osquery.conf"],
     ["[bold]apt  start...[/bold]", f"systemctl enable --now osqueryd"],
-    ["[bold]apt  clean...[/bold]", f"rm osquery_5.3.0-1.linux_amd64.deb"],
+    ["[bold]apt  clean...[/bold]", f"rm osquery_5.8.1-1.linux_amd64.deb"],
 ]
 
 
