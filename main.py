@@ -72,7 +72,7 @@ def get_public_ip():
 def install_backend():
     # download & install backend
     cmd(f'mkdir -p {BACKEND_DIR}')
-    cmd(f'cd {PROJECT_DIR} && wget {BACKEND_URL} -O backend.zip && rm -rf backend-* && '
+    cmd(f'cd {PROJECT_DIR} && wget -q {BACKEND_URL} -O  backend.zip && rm -rf backend-* && '
         f'unzip backend.zip > /dev/null && cp -r backend-{BACKEND_VERSION.replace("v","")}/. backend/',
         'Download & install backend...')
     cmd(f'cd {PROJECT_DIR}/backend && python3 -m venv venv ',
@@ -88,7 +88,7 @@ def install_backend():
         'Collect static files')
 
     # download & install frontend
-    cmd(f'cd {BACKEND_DIR}/static && wget {FRONTEND_URL} -O "django_spa.zip" && rm -rf common spa', 'Download frontend')
+    cmd(f'cd {BACKEND_DIR}/static && wget -q {FRONTEND_URL} -O "django_spa.zip" && rm -rf common spa', 'Download frontend')
     cmd(f'cd {BACKEND_DIR}/static && unzip django_spa.zip', 'Unzip frontend')
     cmd(f'cd {BACKEND_DIR}/static && mv django_spa common')
     cmd(f'cd {PROJECT_DIR} && rm -rf backend-release-* *.zip', 'Clean...')

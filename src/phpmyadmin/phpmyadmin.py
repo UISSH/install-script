@@ -209,7 +209,7 @@ def install_phpmyadmin() -> (bytes, bytes):
     # curl -fsSL https://nginx.org/keys/nginx_signing.key | apt-key add > /dev/null 2>&1
     # """
     _cmd = f"""
-    wget https://files.phpmyadmin.net/phpMyAdmin/{phpmyadmin_version}/phpMyAdmin-{phpmyadmin_version}-all-languages.tar.gz
+    wget -q https://files.phpmyadmin.net/phpMyAdmin/{phpmyadmin_version}/phpMyAdmin-{phpmyadmin_version}-all-languages.tar.gz
     tar -zxvf phpMyAdmin-{phpmyadmin_version}-all-languages.tar.gz >> /dev/null
     mv phpMyAdmin-{phpmyadmin_version}-all-languages /usr/share/phpMyAdmin 
   
