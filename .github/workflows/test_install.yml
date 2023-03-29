@@ -28,4 +28,4 @@ jobs:
       - name: Django test
         run: |
             cd /usr/local/uissh/backend && \
-            /usr/local/uissh/backend/venv/bin/python3 manage.py test
+            sudo /usr/local/uissh/backend/venv/bin/python3 manage.py test
