@@ -1,6 +1,6 @@
 name: Install Ubuntu 22.04 test
 
-on: [push]
+on: [ push ]
 
 jobs:
   deploy-test:
