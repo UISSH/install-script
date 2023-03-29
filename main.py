@@ -209,7 +209,8 @@ def test():
     test_systemd('mariadb', 'systemctl is-active --quiet mariadb')
     test_systemd('osqueryd', 'systemctl is-active --quiet osqueryd')
 
-    php_version = os.popen('php -v').read().split(' ')[1].split('.')[0]
+    php_version = os.popen('php -v').read().split(' ')[1].split('.')[:2]
+    php_version = ".".join(php_version)
     php_fpm = f'php{php_version}-fpm'
     test_systemd(php_fpm, f'systemctl is-active --quiet {php_fpm}')
 
