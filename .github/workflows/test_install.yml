@@ -20,7 +20,7 @@ jobs:
       steps:
       - uses: actions/checkout@v3
       - name: init
-        run: bash install.sh 
+        run: sudo bash install.sh 
       - name: deploy
         run: |
             cd /tmp/install-script && \
