@@ -19,13 +19,13 @@ jobs:
       name: Test install backend on Ubuntu 22.04
       steps:
       - uses: actions/checkout@v3
-      - name: init
+      - name: Init
         run: sudo bash install.sh 
-      - name: deploy
+      - name: Deploy
         run: |
             cd /tmp/install-script && \
-            python3 main.py --login_email=root@root.com --db_root_password=root --login_password=root
-      - name: django test
+            sudo python3 main.py --login_email=root@root.com --db_root_password=root --login_password=root
+      - name: Django test
         run: |
             cd /usr/local/uissh/backend && \
             /usr/local/uissh/backend/venv/bin/python3 manage.py test
