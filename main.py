@@ -8,8 +8,8 @@ MIRROR_URL = 'https://mirror-cloudflare.uissh.com/'
 TEST_FLAG = False
 BACKEND_VERSION = "v0.0.4-alpha"
 BACKEND_URL = f"{MIRROR_URL}https://github.com/UISSH/backend/archive/refs/tags/{BACKEND_VERSION}.zip"
-FRONTEND_VERSION = "v0.0.4-alpha"
-FRONTEND_URL = f"{MIRROR_URL}https://github.com/UISSH/frontend/releases/download/{FRONTEND_VERSION}/django_spa.zip"
+FRONTEND_VERSION = "v0.0.16"
+FRONTEND_URL = f"{MIRROR_URL}https://github.com/UISSH/react-frontend/releases/download/{FRONTEND_VERSION}/django_spa.zip"
 
 USER_EMAIL = 'root@root.com'
 USERNAME = 'root'
@@ -74,13 +74,17 @@ def install_backend():
     cmd(f'cd {PROJECT_DIR} && wget {BACKEND_URL} -O backend.zip && rm -rf backend-* && '
         f'unzip backend.zip > /dev/null && cp -r backend-{BACKEND_VERSION.replace("v","")}/. backend/',
         'Download & install backend...')
-    cmd(f'cd {PROJECT_DIR}/backend && python3 -m venv venv ', 'Install virtual environment...')
+    cmd(f'cd {PROJECT_DIR}/backend && python3 -m venv venv ',
+        'Install virtual environment...')
     cmd(f'{PYTHON_PIP} install wheel')
-    cmd(f'cd {BACKEND_DIR} &&  {PYTHON_PIP} install -r requirements.txt ', 'Install requirements.txt...')
+    cmd(f'cd {BACKEND_DIR} &&  {PYTHON_PIP} install -r requirements.txt ',
+        'Install requirements.txt...')
     cmd(f'cp {BACKEND_DIR}/.env.template {BACKEND_DIR}/.env', 'Init env...')
-    cmd(f'cd {BACKEND_DIR} && {PYTHON_BIN} manage.py makemigrations', 'Make migrating...')
+    cmd(f'cd {BACKEND_DIR} && {PYTHON_BIN} manage.py makemigrations',
+        'Make migrating...')
     cmd(f'cd {BACKEND_DIR} && {PYTHON_BIN} manage.py migrate')
-    cmd(f'cd {BACKEND_DIR} && {PYTHON_BIN} manage.py collectstatic --noinput', 'Collect static files')
+    cmd(f'cd {BACKEND_DIR} && {PYTHON_BIN} manage.py collectstatic --noinput',
+        'Collect static files')
 
     # download & install frontend
     cmd(f'cd {BACKEND_DIR}/static && wget {FRONTEND_URL} -O "django_spa.zip" && rm -rf common spa', 'Download frontend')
@@ -97,8 +101,10 @@ def install_lnmp():
     os.system('/usr/bin/python3 ./src/osquery/osquery.py')
     os.system('/usr/bin/python3 ./src/php/php.py')
 
-    os.system(f'/usr/bin/python3 ./src/database/mariadb.py --set_root_password={DB_PASSWORD}')
-    os.system(f'/usr/bin/python3 ./src/phpmyadmin/phpmyadmin.py --set_root_password={DB_PASSWORD}')
+    os.system(
+        f'/usr/bin/python3 ./src/database/mariadb.py --set_root_password={DB_PASSWORD}')
+    os.system(
+        f'/usr/bin/python3 ./src/phpmyadmin/phpmyadmin.py --set_root_password={DB_PASSWORD}')
     print(f"Set Database password:{DB_PASSWORD}")
 
 
@@ -138,7 +144,6 @@ def init_backend_settings():
 
     with open(_env_path, "w") as f:
         f.write(data)
-
 
 
 def init_system_config():
@@ -187,6 +192,7 @@ def print_info():
 
     print(info)
 
+
 def test_systemd(name, cmd):
     print(f'test {name} ...')
     if os.system(cmd) == 0:
@@ -209,11 +215,14 @@ if __name__ == '__main__':
         sys.exit("\nOnly root can run this script\n")
 
     parser = argparse.ArgumentParser(description="ui-ssh install script.")
-    parser.add_argument('--login_email', type=str, help='website management email.')
+    parser.add_argument('--login_email', type=str,
+                        help='website management email.')
 
-    parser.add_argument('--login_username', type=str, help='website management username.', default='root')
+    parser.add_argument('--login_username', type=str,
+                        help='website management username.', default='root')
 
-    parser.add_argument('--login_password', type=str, help='website management password.')
+    parser.add_argument('--login_password', type=str,
+                        help='website management password.')
     parser.add_argument('--db_root_password', type=str,
                         help='Setting the root password ensures that nobody can log into the MariaDB'
                              ' root user without the proper authorisation.')
