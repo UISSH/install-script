@@ -195,6 +195,7 @@ def print_info():
 
 
 def test_systemd(name, cmd):
+
     print(f'test {name} ...')
     if os.system(cmd) == 0:
         print(f'{name} is ok')
@@ -207,7 +208,10 @@ def test():
     test_systemd('nginx', 'systemctl is-active --quiet nginx')
     test_systemd('mariadb', 'systemctl is-active --quiet mariadb')
     test_systemd('osqueryd', 'systemctl is-active --quiet osqueryd')
-    test_systemd('php7.4-fpm', 'systemctl is-active --quiet php7.4-fpm')
+
+    php_version = os.popen('php -v').read().split(' ')[1].split('.')[0]
+    php_fpm = f'php{php_version}-fpm'
+    test_systemd(php_fpm, f'systemctl is-active --quiet {php_fpm}')
 
 
 if __name__ == '__main__':
