@@ -3,13 +3,13 @@ name: Install Test
 on: [ push ]
 
 jobs:
-  hello_world_job:
+  debian:
     runs-on: ubuntu-22.04
     name: Test install backend on Debian 11
     steps:
       - name: Test run server
         uses: UISSH/install-script@latest
-  deploy-test:
+  ubuntu:
       runs-on: ubuntu-22.04
       name: Test install backend on Ubuntu 22.04
       steps:
