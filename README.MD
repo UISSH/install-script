@@ -1,6 +1,6 @@
 # Installation
 
-Currently only supports debian 11.
+Currently only supports Debian 11, Ubuntu 22.04
 
 **1.Download init script**
 
