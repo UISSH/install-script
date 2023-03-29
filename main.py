@@ -163,7 +163,7 @@ def print_info():
         management address：
           - http://{get_public_ip()}/#/
           - https://{DOMAIN}/#/
-          - https://dev-dash.uissh.com/#/?apiUrl=https://{DOMAIN} (need to enable ssl.)
+          - https://dash.uissh.com/#/?apiUrl=https://{DOMAIN} (need to enable ssl.)
         phpmyadmin address:
           - https://{DOMAIN}:8080
           """
@@ -171,7 +171,7 @@ def print_info():
         management_info = f"""
         management address：
           - http://{get_public_ip()}/#/
-          - https://dev-dash.uissh.com/#/?apiUrl=https://{get_public_ip()} (need to enable ssl.)
+          - https://dash.uissh.com/#/?apiUrl=https://{get_public_ip()} (need to enable ssl.)
         phpmyadmin address:
           - http://{get_public_ip()}:8080
         """
