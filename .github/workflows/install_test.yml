@@ -1,0 +1,27 @@
+name: Install Test
+
+on: [ push ]
+
+jobs:
+  hello_world_job:
+    runs-on: ubuntu-22.04
+    name: Test install backend on Debian 11
+    steps:
+      - name: Test run server
+        uses: UISSH/install-script@latest
+  deploy-test:
+      runs-on: ubuntu-22.04
+      name: Test install backend on Ubuntu 22.04
+      steps:
+        - uses: actions/checkout@v3
+        - name: init
+        - run: bash install.sh 
+        - name: deploy
+        - run: |
+          cd /tmp/install-script && \
+          python3 main.py --login_email=root@root.com --db_root_password=root --login_password=root
+        - name: django test
+        - run: |
+          cd /usr/local/uissh/backend && \
+          /usr/local/uissh/backend/venv/bin/python3 manage.py test
+
