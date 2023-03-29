@@ -26,7 +26,7 @@ PYTHON_PIP = f"{PROJECT_DIR}/backend/venv/bin/pip"
 def cmd(_cmd, msg=None, ignore=False):
     if msg:
         print(msg)
-    ret = os.system(_cmd + ' >> install.log')
+    ret = os.system(_cmd)
     if ignore is False and ret != 0:
         raise RuntimeError(f'step:{msg}\n{_cmd}')
 
@@ -89,7 +89,7 @@ def install_backend():
     # download & install frontend
     cmd(f'cd {BACKEND_DIR}/static && wget {FRONTEND_URL} -O "django_spa.zip" && rm -rf common spa', 'Download frontend')
     cmd(f'cd {BACKEND_DIR}/static && unzip django_spa.zip', 'Unzip frontend')
-    cmd(f'cd {BACKEND_DIR}/static && mv spa common')
+    cmd(f'cd {BACKEND_DIR}/static && mv django_spa common')
     cmd(f'cd {PROJECT_DIR} && rm -rf backend-release-* *.zip', 'Clean...')
 
 
