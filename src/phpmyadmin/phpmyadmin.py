@@ -17,7 +17,8 @@ parser = argparse.ArgumentParser(description=f'Install {soft_name}')
 parser.add_argument('--set_root_password', type=str,
                     help='Setting the root password ensures that nobody can log into the MariaDB'
                          ' root user without the proper authorisation.')
-parser.add_argument("--verbosity", action="store_true", help="increase output verbosity")
+parser.add_argument("--verbosity", action="store_true",
+                    help="increase output verbosity")
 args = parser.parse_args()
 
 if args.set_root_password is None:
@@ -232,7 +233,6 @@ def install_phpmyadmin() -> (bytes, bytes):
     mysql -u root -p{mysql_password} -e "FLUSH PRIVILEGES;"
     mkdir -p /var/log/nginx
     """
-    print(_cmd_1)
 
     os.system(_cmd_1)
 

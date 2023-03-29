@@ -28,7 +28,8 @@ def cmd(_cmd, msg=None, ignore=False):
         print(msg)
     ret = os.system(_cmd)
     if ignore is False and ret != 0:
-        raise RuntimeError(f'step:{msg}\n{_cmd}')
+        print(f"{_cmd} failed")
+        exit(1)
 
 
 def bind_domain():
