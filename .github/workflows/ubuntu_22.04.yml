@@ -1,4 +1,4 @@
-name: Deployment CI
+name: Ubuntu 22.04 CI
 
 on:
   push:

@@ -1,4 +1,4 @@
-name: Deployment CI
+name: Debian 11 CI
 
 on:
   push:
