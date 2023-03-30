@@ -1,4 +1,4 @@
-name: test install
+name: Deployment CI
 
 on:
   push:
@@ -7,16 +7,9 @@ on:
     branches: ["main"]
 
 jobs:
-  install-debian:
-    runs-on: ubuntu-22.04
-    name: Test install backend on Debian 11
-    steps:
-      - name: Test run server
-        uses: UISSH/install-script@latest
-
   install-ubuntu:
     runs-on: ubuntu-22.04
-    name: Test install backend on Ubuntu 22.04
+    name: on Ubuntu 22.04
     steps:
       - uses: actions/checkout@v3
       - name: Init

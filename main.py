@@ -89,7 +89,8 @@ def install_backend():
 
     # download & install frontend
     cmd(f'cd {BACKEND_DIR}/static && wget -q {FRONTEND_URL} -O "django_spa.zip" && rm -rf common spa', 'Download frontend')
-    cmd(f'cd {BACKEND_DIR}/static && unzip django_spa.zip', 'Unzip frontend')
+    cmd(f'cd {BACKEND_DIR}/static && unzip django_spa.zip > /dev/null',
+        'Unzip frontend')
     cmd(f'cd {BACKEND_DIR}/static && mv django_spa common')
     cmd(f'cd {PROJECT_DIR} && rm -rf backend-release-* *.zip', 'Clean...')
 

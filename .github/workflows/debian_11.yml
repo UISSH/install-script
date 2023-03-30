@@ -1,0 +1,27 @@
+name: Deployment CI
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  install-debian:
+    runs-on: ubuntu-22.04
+    name: on Debian 11
+    steps:
+      - name: Test run server
+        uses: UISSH/install-script@latest
+
+  install-ubuntu:
+    runs-on: ubuntu-22.04
+    name: Test install backend on Ubuntu 22.04
+    steps:
+      - uses: actions/checkout@v3
+      - name: Init
+        run: sudo bash install.sh
+      - name: Deploy
+        run: |
+          cd /tmp/install-script && \
+          sudo python3 main.py --login_email=root@root.com --db_root_password=root --login_password=root

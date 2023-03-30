@@ -197,7 +197,7 @@ def d_print(*args, **kwargs):
         print(*args, **kwargs)
 
 
-def install_phpmyadmin() -> (bytes, bytes):
+def install_phpmyadmin():
     """
     https://nginx.org/en/linux_packages.html#Debian
     """
@@ -210,7 +210,7 @@ def install_phpmyadmin() -> (bytes, bytes):
     # """
     _cmd = f"""
     wget -q https://files.phpmyadmin.net/phpMyAdmin/{phpmyadmin_version}/phpMyAdmin-{phpmyadmin_version}-all-languages.tar.gz
-    tar -zxvf phpMyAdmin-{phpmyadmin_version}-all-languages.tar.gz >> /dev/null
+    tar -zxvf phpMyAdmin-{phpmyadmin_version}-all-languages.tar.gz > /dev/null
     mv phpMyAdmin-{phpmyadmin_version}-all-languages /usr/share/phpMyAdmin 
   
     """
@@ -284,14 +284,18 @@ server {
     chmod 777 /usr/share/phpMyAdmin/tmp
     chown -R www-data:www-data /usr/share/phpMyAdmin
     systemctl restart nginx 
-    systemctl restart php7.4-fpm
     """
     os.system(_cmd_2)
+
+    php_version = os.popen('php -v').read().split(' ')[1].split('.')[:2]
+    php_version = ".".join(php_version)
+    php_fpm = f'php{php_version}-fpm'
+    os.system(f'systemctl restart {php_fpm}')
 
     return b"\nok", b" "
 
 
-def cmd(run_cmd) -> (bytes, bytes):
+def cmd(run_cmd):
     if callable(run_cmd):
         out = run_cmd()
         return out
@@ -313,7 +317,6 @@ def test():
         _result = f"\n[red]{soft_name} installed failed![/red]"
         print(_result)
         exit(1)
-        return False
 
 
 dependents = "php-json php-mbstring php-xml"
