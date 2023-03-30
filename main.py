@@ -150,9 +150,36 @@ def init_backend_settings():
 
 def init_system_config():
     systemd_path = '/lib/systemd/system/ui-ssh.service'
-    cmd(f'cp ./config/backend.conf /etc/nginx/sites-available/default')
-    cmd(f'cp ./config/ui-ssh.service {systemd_path}')
 
+    if DOMAIN:
+        """ 
+        如果用户指定了域名并成功签发了 SSL 证书，则面板将被配置为只允许通过该域名访问。在这种情况下，以下服务将使用该加密证书：
+        - WebSocket（从 ws 协议升级到 wss）
+        - FTP（可以升级到 ftps）
+        - HTTP（升级到 HTTPS）
+        - phpMyAdmin 面板也将使用 HTTPS，以防止传输数据泄露数据库密码。
+
+        If a domain name is specified and SSL certificate is successfully issued, 
+        the panel will be configured to only allow access through the domain name. 
+        In this scenario, the following services will use the encrypted certificate:
+        - WebSocket (ws protocol will be upgraded to wss)
+        - FTP (can be upgraded to ftps)
+        - HTTP (will be upgraded to HTTPS)
+        - phpMyAdmin panel will also use HTTPS to prevent leaking database passwords during transmission. 
+        """
+
+        cmd('cp ./config/default.conf /etc/nginx/sites-available/default')
+    else:
+        """ 
+        如果域名未指定或者指定域名后由于 bug 导致证书生成失败，则只能通过 IP 地址访问面板（这样做非常不安全会暴力面板入口地址）
+
+        If a domain name is not specified,
+        or if a bug causes the SSL certificate to fail during issuance despite specifying a domain name,
+        accessing the panel will only be possible through the IP address (which is very unsafe and can expose the panel entry point)
+        """
+        cmd(f'cp ./config/backend.conf /etc/nginx/sites-available/default')
+
+    cmd(f'cp ./config/ui-ssh.service {systemd_path}')
     cmd(f'ln -s {systemd_path} /etc/systemd/system/ui-ssh.service', ignore=True)
     cmd('systemctl enable --now ui-ssh')
     cmd('systemctl restart nginx')
