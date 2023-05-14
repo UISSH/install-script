@@ -1,1 +1,1 @@
-UPDATE common_systemconfig SET value='{"database": {"root_username": "root", "root_password": "****"}}' WHERE key="SETTINGS";
+UPDATE common_systemconfigmodel SET value='{"database": {"root_username": "root", "root_password": "****"}}' WHERE key="SETTINGS";

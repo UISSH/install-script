@@ -15,6 +15,4 @@ jobs:
       - name: Init
         run: sudo bash install.sh
       - name: Deploy
-        run: |
-          cd /tmp/install-script && \
-          sudo python3 main.py --login_email=root@root.com --db_root_password=root --login_password=root
+        run: sudo python3 main.py --email=root@root.com --db_password=root --password=root

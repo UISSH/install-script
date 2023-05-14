@@ -18,16 +18,16 @@ curl -o- -L https://raw.githubusercontent.com/UISSH/install-script/main/install.
 
 ```bash
 cd /tmp/install-script 
-python3 main.py --login_email=root@root.com --db_root_password=root --login_password=root --domain=demo.uissh.com
+python3 main.py --email=root@root.com --db_password=root --password=root --domain=demo.uissh.com
 ```
 
 > For IP access, this method is not recommended.
 ```bash
 cd /tmp/install-script 
-python3 main.py --login_email=root@root.com --db_root_password=root --login_password=root
+python3 main.py --email=root@root.com --db_password=root --password=root
 ```
 # Test
 
 ```
-python3 main.py --login_email=root@root.com --db_root_password=root --login_password=root --test=true
+python3 main.py --email=root@root.com --db_password=root --password=root --test=true
 ```

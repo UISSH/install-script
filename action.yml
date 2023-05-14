@@ -1,7 +1,0 @@
-# action.yml
-name: 'Test install backend'
-description: 'Test install backend'
-
-runs:
-  using: 'docker'
-  image: 'Dockerfile'
