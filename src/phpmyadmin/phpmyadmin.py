@@ -8,26 +8,37 @@ import subprocess
 import sys
 
 from rich import print
-from rich.progress import Progress, SpinnerColumn, TimeElapsedColumn, BarColumn, TextColumn
+from rich.progress import (
+    Progress,
+    SpinnerColumn,
+    TimeElapsedColumn,
+    BarColumn,
+    TextColumn,
+)
 
 debug = False
 soft_name = "phpMyAdmin"
 
-parser = argparse.ArgumentParser(description=f'Install {soft_name}')
-parser.add_argument('--set_root_password', type=str,
-                    help='Setting the root password ensures that nobody can log into the MariaDB'
-                         ' root user without the proper authorisation.')
-parser.add_argument("--verbosity", action="store_true",
-                    help="increase output verbosity")
+parser = argparse.ArgumentParser(description=f"Install {soft_name}")
+parser.add_argument(
+    "--set_root_password",
+    type=str,
+    help="Setting the root password ensures that nobody can log into the MariaDB"
+    " root user without the proper authorisation.",
+)
+parser.add_argument(
+    "--verbosity", action="store_true", help="increase output verbosity"
+)
 args = parser.parse_args()
 
 if args.set_root_password is None:
     sys.exit(
-        "\nPlease Setting the root password, use '--set_root_password SET_ROOT_PASSWORD' or -h read help info.\n")
+        "\nPlease Setting the root password, use '--set_root_password SET_ROOT_PASSWORD' or -h read help info.\n"
+    )
 
 
 mysql_password = args.set_root_password
-phpmyadmin_version = "5.2.0"
+phpmyadmin_version = "5.2.1"
 
 # "<?php" must be at the beginning of the line!!!
 config_inc_php_data = """<?php
@@ -287,10 +298,10 @@ server {
     """
     os.system(_cmd_2)
 
-    php_version = os.popen('php -v').read().split(' ')[1].split('.')[:2]
+    php_version = os.popen("php -v").read().split(" ")[1].split(".")[:2]
     php_version = ".".join(php_version)
-    php_fpm = f'php{php_version}-fpm'
-    os.system(f'systemctl restart {php_fpm}')
+    php_fpm = f"php{php_version}-fpm"
+    os.system(f"systemctl restart {php_fpm}")
 
     return b"\nok", b" "
 
@@ -300,17 +311,19 @@ def cmd(run_cmd):
         out = run_cmd()
         return out
     else:
-        out = subprocess.Popen(run_cmd.split(" "),
-                               stdout=subprocess.PIPE,
-                               stderr=subprocess.STDOUT)
+        out = subprocess.Popen(
+            run_cmd.split(" "), stdout=subprocess.PIPE, stderr=subprocess.STDOUT
+        )
         return out.communicate()
 
 
 def test():
     _res, _err = cmd("nginx -v")
     if "nginx" in _res.decode():
-        _result = f"\n[green]Install [blue]{soft_name}[/blue] successfully!" \
-                  f"\n{_res.decode().strip()}[/green]"
+        _result = (
+            f"\n[green]Install [blue]{soft_name}[/blue] successfully!"
+            f"\n{_res.decode().strip()}[/green]"
+        )
         print(_result)
         return True
     else:
@@ -323,20 +336,20 @@ dependents = "php-json php-mbstring php-xml"
 
 cmd_list = [
     ["[bold]apt  update...[/bold]", "apt-get update -y"],
-    ["[bold]apt  install dependents...[/bold]",
-     f"apt-get install {dependents} -y"],
+    ["[bold]apt  install dependents...[/bold]", f"apt-get install {dependents} -y"],
     ["[bold]Install phpmyadmin..[/bold]", install_phpmyadmin],
-
 ]
 
 
 def install():
     print(f"Install [bold magenta]{soft_name}[/bold magenta]", ":vampire:")
-    with Progress(SpinnerColumn(),
-                  "{task.description}",
-                  BarColumn(),
-                  TextColumn("[progress.percentage]{task.percentage:>3.0f}%"),
-                  TimeElapsedColumn(), ) as progress:
+    with Progress(
+        SpinnerColumn(),
+        "{task.description}",
+        BarColumn(),
+        TextColumn("[progress.percentage]{task.percentage:>3.0f}%"),
+        TimeElapsedColumn(),
+    ) as progress:
         task = progress.add_task(f"Install {soft_name}", total=len(cmd_list))
         result = ""
         info_log = ""
@@ -354,8 +367,7 @@ def install():
     print(result)
 
 
-if __name__ == '__main__':
-
+if __name__ == "__main__":
     debug = args.verbosity
 
     if not os.geteuid() == 0:
