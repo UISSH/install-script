@@ -26,8 +26,3 @@ python3 main.py --email=root@root.com --db_password=root --password=root --domai
 cd /tmp/install-script 
 python3 main.py --email=root@root.com --db_password=root --password=root
 ```
-# Test
-
-```
-python3 main.py --email=root@root.com --db_password=root --password=root --test=true
-```

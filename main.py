@@ -16,7 +16,6 @@ CI_FLAG = False
 BACKEND_VERSION = "v0.2.1"
 FRONTEND_VERSION = "v0.2.2"
 
-logging.info(f"Start install UISSH {BACKEND_VERSION}...")
 
 FRONTEND_URL = f"{MIRROR_URL}https://github.com/UISSH/react-frontend/releases/download/{FRONTEND_VERSION}/django_spa.zip"
 
@@ -293,6 +292,12 @@ if __name__ == "__main__":
         " root user without the proper authorisation.",
     )
 
+    parser.add_argument(
+        "--version",
+        type=str,
+        default=BACKEND_VERSION,
+        help=f"ui-ssh version. e.g: {BACKEND_VERSION}",
+    )
     parser.add_argument("--domain", type=str, default="")
     parser.add_argument("--ci", action="store_true")
     parser.add_argument("--lnmp", action="store_true")
@@ -308,7 +313,14 @@ if __name__ == "__main__":
     DB_PASSWORD = args.db_password
     DOMAIN = args.domain
     CI_FLAG = args.ci
+
     DEVELOP_BRANCH = args.develop
+    BACKEND_VERSION = args.version
+
+    if DEVELOP_BRANCH:
+        logging.info("Deploy the develop branch")
+    else:
+        logging.info(f"Start install UISSH {BACKEND_VERSION}...")
 
     if args.lnmp:
         install_lnmp()
