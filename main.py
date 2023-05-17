@@ -13,8 +13,8 @@ logging.basicConfig(
 
 MIRROR_URL = "https://mirror-cloudflare.uissh.com/"
 CI_FLAG = False
-BACKEND_VERSION = "v0.2.1"
-FRONTEND_VERSION = "v0.2.2"
+BACKEND_VERSION = "v0.2.2"
+FRONTEND_VERSION = "v0.2.3"
 
 
 FRONTEND_URL = f"{MIRROR_URL}https://github.com/UISSH/react-frontend/releases/download/{FRONTEND_VERSION}/django_spa.zip"
