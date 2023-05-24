@@ -6,9 +6,16 @@ import subprocess
 import sys
 
 from rich import print
-from rich.progress import Progress, SpinnerColumn, TimeElapsedColumn, BarColumn, TextColumn
+from rich.progress import (
+    Progress,
+    SpinnerColumn,
+    TimeElapsedColumn,
+    BarColumn,
+    TextColumn,
+)
 
 debug = False
+version = "5.8.2"
 
 soft_name = "Osquery"
 
@@ -18,17 +25,16 @@ def cmd(run_cmd) -> (bytes, bytes):
         out = run_cmd()
         return out
     else:
-        out = subprocess.Popen(run_cmd.split(" "),
-                               stdout=subprocess.PIPE,
-                               stderr=subprocess.STDOUT)
+        out = subprocess.Popen(
+            run_cmd.split(" "), stdout=subprocess.PIPE, stderr=subprocess.STDOUT
+        )
         return out.communicate()
 
 
 def test():
     _res, _err = cmd("osqueryi -h")
-    if "osquery 5.8.1" in _res.decode():
-        _result = f"\n[green]Install [blue]{soft_name}[/blue] successfully!" \
-                  f"[/green]"
+    if f"osquery {version}" in _res.decode():
+        _result = f"\n[green]Install [blue]{soft_name}[/blue] successfully!" f"[/green]"
         print(_result)
         return True
     else:
@@ -38,27 +44,39 @@ def test():
         return False
 
 
-download_deb = "wget -q -O osquery_5.8.1-1.linux_amd64.deb https://pkg.osquery.io/deb/osquery_5.8.1-1.linux_amd64.deb"
+download_deb = f"wget -q -O osquery_{version}-1.linux_amd64.deb https://pkg.osquery.io/deb/osquery_{version}-1.linux_amd64.deb"
 
 cmd_list = [
-    ["[bold]apt  download osquery_5.8.1-1.linux_amd64.deb ...[/bold]", download_deb],
-    ["[bold]apt  install osquery...[/bold]", f"dpkg -i osquery_5.8.1-1.linux_amd64.deb"],
-
-    ["[bold]apt  systemctl mask --now systemd-journald-audit.socket...[/bold]",
-     f"systemctl mask --now systemd-journald-audit.socket"],
-    ["[bold]apt  configure...[/bold]", f"cp /opt/osquery/share/osquery/osquery.example.conf /etc/osquery/osquery.conf"],
+    [
+        f"[bold]apt  download osquery_{version}-1.linux_amd64.deb ...[/bold]",
+        download_deb,
+    ],
+    [
+        "[bold]apt  install osquery...[/bold]",
+        f"dpkg -i osquery_{version}-1.linux_amd64.deb",
+    ],
+    [
+        "[bold]apt  systemctl mask --now systemd-journald-audit.socket...[/bold]",
+        f"systemctl mask --now systemd-journald-audit.socket",
+    ],
+    [
+        "[bold]apt  configure...[/bold]",
+        f"cp /opt/osquery/share/osquery/osquery.example.conf /etc/osquery/osquery.conf",
+    ],
     ["[bold]apt  start...[/bold]", f"systemctl enable --now osqueryd"],
-    ["[bold]apt  clean...[/bold]", f"rm osquery_5.8.1-1.linux_amd64.deb"],
+    ["[bold]apt  clean...[/bold]", f"rm osquery_{version}-1.linux_amd64.deb"],
 ]
 
 
 def install():
     print(f"Install [bold magenta]{soft_name}[/bold magenta]", ":vampire:")
-    with Progress(SpinnerColumn(),
-                  "{task.description}",
-                  BarColumn(),
-                  TextColumn("[progress.percentage]{task.percentage:>3.0f}%"),
-                  TimeElapsedColumn(), ) as progress:
+    with Progress(
+        SpinnerColumn(),
+        "{task.description}",
+        BarColumn(),
+        TextColumn("[progress.percentage]{task.percentage:>3.0f}%"),
+        TimeElapsedColumn(),
+    ) as progress:
         task = progress.add_task(f"Install {soft_name}", total=len(cmd_list))
         result = ""
         info_log = ""
@@ -76,9 +94,11 @@ def install():
     print(result)
 
 
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description=f'Install {soft_name}')
-    parser.add_argument("--verbosity", action="store_true", help="increase output verbosity")
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description=f"Install {soft_name}")
+    parser.add_argument(
+        "--verbosity", action="store_true", help="increase output verbosity"
+    )
     args = parser.parse_args()
     debug = args.verbosity
     if not os.geteuid() == 0:
